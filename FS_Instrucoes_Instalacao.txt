@@ -1,0 +1,173 @@
+COMO COMPILAR E INSTALA O FreeSWITCH 1.6 EM 10 PASSOS NO Dedian 8 Jessie.
+---------------------------------------------------------------------
+
+Sobre o FreeSWITCH:
+
+Ã‰ um switch soft de telefonia de codigo aberto craido em 2006, de acordo com wiki oficial:
+https://freeswitch.org/confluence/display/FREESWITCH/FreeSWITCH+Explained
+
+Uma plataforma de telefonia escalavÃ©l projetada para rotear e interconctar protocolos de comunicaÃ§Ã£o, usando audio, video, texto
+ou qualquer outra midia.
+
+--Build & Install FreeSWITCH--
+
+EstÃ¡ abordagem contemplarar a instalaÃ§Ã£o apartir dos fontes.
+
+Passo-1:
+    Atulizar a instalÃ§Ã£o do debian e instalar dois pacotes bÃ¡sicos; curl e git
+    Edite o arquivo '/etc/apt/source.list' e adicione a seguinte url:
+
+    deb http://ftp.ca.debian.org/debian/ jessie main contrib
+
+    Execute os camandos abixo para atualizar os repositorios e instalar os pacotes curl e git
+
+    apt-get update && apt-get install -y curl git
+
+Passo-2:
+    Adicione a chave GPG do FreeSwitch ao APT sources keys.
+
+    curl https://files.freeswitch.org/repo/deb/debian/freeswitch_archive_g0.pub | apt-key add -
+
+Passo-3:
+    Adicione o repositÃ³rio do Freeswitch ao APT source.
+
+    echo "deb http://files.freeswitch.org/repo/deb/freeswitch-1.6/ jessie main" > /etc/apt/sources.list.d/freeswitch.list
+
+Passo-4:
+    Atualize novamente o Debian:
+
+    apt-get update
+
+Passo-5:
+    Instalando as dependencias do FreeSwitch.
+
+    apt-get install -y --force-yes freeswitch-video-deps-most
+
+Passo-6:
+    Instalando dependencias adicionais nÃ£o supridas com o passo anterior.
+    NecessÃ¡rias para compilar o mod_fsv.
+
+     apt-get install -y libyuv-dev libvpx2-dev
+
+Passo-7:
+    Baixando os fontes do FreeSwitch:
+
+     git config --global pull.rebase true
+     cd /usr/src/
+     git clone https://freeswitch.org/stash/scm/fs/freeswitch.git freeswitch.git
+
+Passo-8:
+    Pegando a versÃ£o 1.6 e compilando:
+
+    cd freeswitch.git
+    git checkout v1.6
+    ./bootstrap.sh -j
+    ./configure -C
+    make && make install
+
+Passo-9:
+    Compilando e instalando os sons do FreeSwitch:
+
+    make all cd-sounds-install cd-moh-install
+
+Passo-10:
+    Criando links para os executaveis freeswitch e fs_cli:
+
+    ln -s /usr/local/freeswitch/bin/freeswitch /usr/bin/freeswitch
+    ln -s /usr/local/freeswitch/bin/fs_cli /usr/bin/fs_cli
+
+
+    Ajustando permiÃ§Ãµes e usuÃ¡rios:
+        cd /usr/local
+        groupadd freeswitch
+        chown -R freeswitch:freeswitch /usr/local/freeswitch/
+        adduser --disabled-password  --quiet --system --home /usr/local/freeswitch --gecos "FreeSWITCH Voice Platform" --ingroup freeswitch freeswitch
+        chown -R freeswitch:freeswitch /usr/local/freeswitch/
+        chmod -R ug=rwX,o= /usr/local/freeswitch/
+        chmod -R u=rwx,g=rx /usr/local/freeswitch/bin/
+
+Criando o serviÃ§o FreeSwitch para iniciar no boot:
+    Para isso precisamos criar um script init, para o systemd (https://en.wikipedia.org/wiki/Systemd).
+
+    Execute os comandos abaixo:
+
+    touch /lib/systemd/system/freeswitch.service
+
+    Copie o conteudo abaixo para o arquivo /lib/systemd/system/freeswitch.service:
+    Obs. sem as aspas.
+
+    "[Unit]
+    Description=freeswitch
+    After=syslog.target network.target local-fs.target
+
+    [Service]
+    ; service
+    Type=forking
+    PIDFile=/usr/local/freeswitch/run/freeswitch.pid
+    PermissionsStartOnly=true
+    ExecStart=/usr/local/freeswitch/bin/freeswitch -u freeswitch -g freeswitch -ncwait -nonat -rp
+    TimeoutSec=45s
+    Restart=on-failure
+    ; exec
+    WorkingDirectory=/usr/local/freeswitch/bin
+    User=root
+    Group=daemon
+    LimitCORE=infinity
+    LimitNOFILE=100000
+    LimitNPROC=60000
+    ;LimitSTACK=240
+    LimitRTPRIO=infinity
+    LimitRTTIME=7000000
+    IOSchedulingClass=realtime
+    IOSchedulingPriority=2
+    CPUSchedulingPolicy=rr
+    CPUSchedulingPriority=89
+    UMask=0007
+
+    [Install]
+    WantedBy=multi-user.target"
+
+    Para finalizar...:
+
+    chmod 750 /lib/systemd/system/freeswitch.service
+    ln -s /lib/systemd/system/freeswitch.service /etc/systemd/system/freeswitch.service
+    systemctl daemon-reload
+
+    Agora jÃ¡ pode iciar o serviÃ§o:
+
+    systemctl start freeswitch.service
+
+    ou
+
+    service freeswitch start
+
+InstalaÃ§Ã£o de modulos adicionais do FreeSWITCH:
+- mod_callcenter
+- mod_amqp
+- mod_xml_curl
+- mod_python
+
+Entre no deiretÃ³rio dos fontes em "/usr/src/freeswitch.git/src/mod/" localize o modulo desejado, acesse modulo,
+compile e instale:
+
+localizando o moduloe:
+
+find . -name "mod_amqp"
+
+cd event_handlers/mod_amqp
+
+make && make install
+
+Referencias:
+
+    http://howto.lintel.in/how-to-install-freeswitch-1-6-on-debian-8-jessie/
+    https://dopensource.com/2016/10/08/freeswitch-1-6-quick-install-guide-for-debian-jessie/
+    https://freeswitch.org/confluence/display/FREESWITCH/Installation
+    https://freeswitch.org/confluence/display/FREESWITCH/Debian+8+Jessie
+    https://freeswitch.org/confluence/display/FREESWITCH/Debian+Post-Install+Tasks
+
+
+
+Checking module integrity in target [/usr/local/freeswitch/mod]
+
+

@@ -1,0 +1,8 @@
+---
+- name:
+  hosts: vm-fs-teste
+
+  tasks:
+    - name: passo_02 - Adicionando a chave GPG do FreeSwitch no APT sources keys
+      shell: curl https://files.freeswitch.org/repo/deb/debian/freeswitch_archive_g0.pub | apt-key add -
+

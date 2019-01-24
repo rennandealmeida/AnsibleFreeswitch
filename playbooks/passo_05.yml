@@ -1,0 +1,13 @@
+---
+- name: Passo_05 
+  hosts: vm-fs-teste
+
+  tasks:
+    - name: Instalando dependencias adicionais do freeswitch...
+      apt:
+         name: "{{dependencias}}"
+         update_cache: yes
+      vars:
+        dependencias:     
+           - libyuv-dev
+           - libvpx2-dev   

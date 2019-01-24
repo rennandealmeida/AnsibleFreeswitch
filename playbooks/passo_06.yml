@@ -1,0 +1,10 @@
+---
+- name: Passo_06
+  hosts: vm-fs-teste
+
+  tasks:
+    - name: Instalando dependencias do Freeswitch      
+      apt:
+        name: freeswitch-video-deps-most
+        update_cache: yes
+        force: yes

@@ -1,0 +1,9 @@
+---
+- name:
+  hosts: vm-fs-teste
+
+  tasks:
+     - name: passo_04 - Atualizando lista de repositorios (apt-get update)
+       apt:
+        update_cache: yes
+

@@ -1,0 +1,18 @@
+---
+- name: Passo_07
+  hosts: vm-fs-teste
+
+  tasks:
+    - name: Baixando os fontes do FreeSwitch via git..
+      git_config:
+         name: alias.ci 
+         scope: global
+         value: pull.rebase 
+    
+    - name: aplicando o git clone no projeto com checkout da versao_1_6 do FreeSwitch
+      git:
+         repo: 'https://freeswitch.org/stash/scm/fs/freeswitch.git'
+         dest: /usr/src/freeswitch
+         version: v1.6
+         clone: yes  
+

@@ -1,0 +1,8 @@
+---
+- name:
+  hosts: vm-fs-teste
+
+  tasks:
+    - name: passo_03 - Adicionando o Repositorio do FreeSwitch no APT sources
+      shell: echo "deb http://files.freeswitch.org/repo/deb/freeswitch-1.6/ jessie main" > /etc/apt/sources.list.d/freeswitch.list
+

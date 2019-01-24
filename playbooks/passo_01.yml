@@ -1,0 +1,19 @@
+---
+- name:
+  hosts: vm-fs-teste
+
+   tasks:
+  - name: Editando link da lista de repositorio em /etc/apt/sources.list
+    shell: echo "deb http://ftp.ca.debian.org/debian/ jessie main contrib" >> /etc/apt/sources.list
+
+  - name: passo_01 - instalando pacotes basicos.
+    apt:
+     name: "{{ packages }}"
+     state: latest
+     update_cache: yes
+    vars:
+     packages:
+         - vim
+         - git
+         - curl
+
