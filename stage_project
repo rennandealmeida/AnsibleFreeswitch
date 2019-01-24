@@ -1,0 +1,21 @@
+==========================================
+sao paulo, 24 de janeiro de 2019
+==========================================
+
+Para conclusão do projeto é necessario concluir 10 steps.
+Chegamos ao 7 com sucesso.
+
+No entanto, os seguintes necessitam de ajustes.
+Esse arquivo se responsabilizará por controlar os estagios desse projeto.
+
+(Os arquivos listados abaixos encontra-se dentro da pasta playbooks)
+passo_01.yml = 'ok'
+passo_02.yml = 'ok'
+passo_03.yml = 'ok'
+passo_04.yml = 'ok'
+passo_05.yml = 'ok'
+passo_06.yml = 'ok'
+passo_07.yml = 'ok'
+passo_08.yml = '-'
+passo_09.yml = '-'
+passo_10.yml = '-'
