@@ -1,3 +1,8 @@
+===================================================================================
+#Os Passos a seguir foram escritos por um colega de trabalho: Francisco Nunes (https://github.com/francisco-nunes).
+#Foi com base nesses procedimentos que optei por criar os playbooks.
+===================================================================================
+
 COMO COMPILAR E INSTALA O FreeSWITCH 1.6 EM 10 PASSOS NO Dedian 8 Jessie.
 ---------------------------------------------------------------------
 
