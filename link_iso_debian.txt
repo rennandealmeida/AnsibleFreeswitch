@@ -5,7 +5,7 @@ sao paulo 24, janeiro 2019
 ABAIXO O LINK DA ISO DEBIAN:
 ==============================
 
-https://mega.nz/#F!tkUTDCpY
+https://mega.nz/#!808zwYbb!vbcrQ8QP7DqwXXbYhPM-U8kZ4rLBKpPVFUNN09AO4uU
 
 Para garantir o funcionamento da instalacao eh aconselhavel que seja utilizada exatamente a versao 8.9 do debian(imagem_no_link).
 
